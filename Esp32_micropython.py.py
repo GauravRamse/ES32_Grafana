@@ -7,18 +7,24 @@ from machine import Pin, ADC
 import time
 
 
-
 def scale_value(x, x_min, x_max, y_min, y_max):
     # Normalize input value
     x_normalized = (x - x_min) / (x_max - x_min)
-    # Scale normalized value to target range
-    y = y_min + x_normalized * (y_max - y_min)
     
-    if y<0:
+    # Invert the normalized value
+    inverted_normalized = 1 - x_normalized
+    
+    # Scale inverted normalized value to target range
+    y = y_min + inverted_normalized * (y_max - y_min)
+    
+    # Ensure y is within [0, 100] range
+    if y < 0:
         y = 0
-    elif y >100:
+    elif y > 100:
         y = 100
+    
     return y
+
 
 
 
@@ -46,8 +52,8 @@ def connect_to_wifi(ssid, password):
 # wifi_ssid = "HACKUPC2024B"
 # wifi_password = "Biene2024!"
 
-wifi_ssid = "Passport"
-wifi_password = "yourpassport"
+wifi_ssid = "wifi name"
+wifi_password = "wifi password"
 
 
 import dht
@@ -109,3 +115,4 @@ if connect_to_wifi(wifi_ssid, wifi_password):
         
           # Delay before next reading
         time.sleep(1)  # Adjust delay as needed
+
